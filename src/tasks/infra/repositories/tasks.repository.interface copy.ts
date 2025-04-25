@@ -1,4 +1,4 @@
-import { Task } from "../infra/schemas/tasks.schema";
+import { Task } from "../schemas/tasks.schema";
 
 export interface ITasksRepository {
     create(createTaskDto: any): Promise<Task>;

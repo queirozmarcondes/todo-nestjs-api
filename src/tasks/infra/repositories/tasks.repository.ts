@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Task, TaskDocument } from '../infra/schemas/tasks.schema';
+import { Task, TaskDocument } from '../schemas/tasks.schema';
 import { NotFoundException } from '@nestjs/common';
 import { ITasksRepository } from './tasks.repository.interface copy';
 
