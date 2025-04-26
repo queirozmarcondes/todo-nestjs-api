@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors(); // Permite qualquer origem
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('Tasks API Management')
@@ -21,7 +21,7 @@ async function bootstrap() {
         description: 'Informe o token JWT no formato: Bearer <token>',
         in: 'header',
       },
-      'access-token', // nome usado no @ApiBearerAuth('access-token')
+      'access-token',
     )
     .build();
 
@@ -30,4 +30,11 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+
+// Tratamento adequado da Promise
+bootstrap()
+  .then(() => console.log('Application started successfully'))
+  .catch((err) => {
+    console.error('Application failed to start', err);
+    process.exit(1);
+  });

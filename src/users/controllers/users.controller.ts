@@ -39,7 +39,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @ApiBearerAuth('access-token') 
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'Lista todos os usuários' })
@@ -52,7 +52,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @ApiBearerAuth('access-token') 
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Busca um usuário pelo ID' })
@@ -64,7 +64,7 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @ApiBearerAuth('access-token') 
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza um usuário pelo ID' })
@@ -75,7 +75,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  @ApiBearerAuth('access-token') 
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Remove um usuário pelo ID' })

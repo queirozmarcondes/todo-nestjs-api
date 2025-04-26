@@ -12,7 +12,6 @@ export class LoginDto {
     example: 'teste@email.com',
     description: 'Endereço de e-mail do usuário',
   })
-  @IsString({ message: 'O e-mail deve ser uma string' })
   @IsNotEmpty({ message: 'O e-mail é obrigatório' })
   @IsEmail({}, { message: 'E-mail inválido' })
   @MaxLength(255, { message: 'O e-mail deve ter no máximo 255 caracteres' })

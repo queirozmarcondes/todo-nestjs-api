@@ -7,9 +7,10 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
 
-import { User, UserDocument } from '../infra/schemas/user.schema';
+import { UserDocument } from '../infra/schemas/user.schema';
 import { UsersRepository } from '../infra/repositories/users.repository';
 import { LoggerService } from 'src/log/logger.service';
+import { UserResponseDto } from '../dto/response-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +19,9 @@ export class UsersService {
     private readonly logger: LoggerService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Partial<UserDocument>> {
+  async create(
+    createUserDto: CreateUserDto,
+  ): Promise<Partial<UserResponseDto>> {
     try {
       this.logger.log('Iniciando criação de usuário');
       const salt = await bcrypt.genSalt();
@@ -33,40 +36,80 @@ export class UsersService {
         await this.usersRepository.create(userToCreate);
       this.logger.log(`Usuário criado com sucesso: ${user.email}`);
 
-      // Remover a senha antes de retornar o usuário
-      const { password, ...userWithoutPassword } = user.toObject();
-
-      return userWithoutPassword; // Retorna o usuário sem a senha
-    } catch (error) {
-      this.logger.error('Erro ao criar usuário', error.stack);
+      const userObj = user.toObject<UserDocument>();
+      const userResponse: UserResponseDto = {
+        id: userObj._id.toString(),
+        email: userObj.email,
+        createdAt: userObj.createdAt,
+        updatedAt: userObj.updatedAt,
+      };
+      return userResponse;
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.stack : 'Unknown error';
+      this.logger.error('Erro ao criar usuário', errorMessage as string);
       throw new InternalServerErrorException('Erro ao criar usuário');
     }
   }
 
-  async findAll(): Promise<UserDocument[]> {
+  async findAll(): Promise<UserResponseDto[]> {
     this.logger.log('Buscando todos os usuários');
-    return this.usersRepository.findAll(); // Retorna uma lista de UserDocument
+
+    const users = await this.usersRepository.findAll(); // Supondo que findAll retorne uma lista de usuários
+
+    const userResponses: UserResponseDto[] = users.map((user) => {
+      const userObj = user.toObject<UserDocument>();
+      return {
+        id: userObj._id.toString(),
+        email: userObj.email,
+        createdAt: userObj.createdAt,
+        updatedAt: userObj.updatedAt,
+      };
+    });
+
+    return userResponses;
   }
 
-  async findOne(id: string): Promise<UserDocument | null> {
+  async findOne(id: string): Promise<UserResponseDto | null> {
     this.logger.log(`Buscando usuário pelo id: ${id}`);
     const user = await this.usersRepository.findById(id);
     if (!user) {
       this.logger.warn(`Usuário com id ${id} não encontrado`);
       throw new NotFoundException('Usuário não encontrado');
     }
-    return user;
+
+    const userObj = user.toObject<UserDocument>();
+    const userResponse: UserResponseDto = {
+      id: userObj._id.toString(),
+      email: userObj.email,
+      createdAt: userObj.createdAt,
+      updatedAt: userObj.updatedAt,
+    };
+    return userResponse;
   }
 
-  async findByEmail(email: string): Promise<UserDocument | null> {
+  async findByEmail(email: string): Promise<UserResponseDto | null> {
     this.logger.log(`Buscando usuário pelo email: ${email}`);
-    return this.usersRepository.findByEmail(email); // Retorna um UserDocument ou null
+    const user = await this.usersRepository.findByEmail(email);
+    if (!user) {
+      this.logger.warn(`Usuário com email ${email} não encontrado`);
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const userObj = user.toObject<UserDocument>();
+    const userResponse: UserResponseDto = {
+      id: userObj._id.toString(),
+      email: userObj.email,
+      createdAt: userObj.createdAt,
+      updatedAt: userObj.updatedAt,
+    };
+    return userResponse;
   }
 
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
-  ): Promise<UserDocument | null> {
+  ): Promise<UserResponseDto | null> {
     this.logger.log(`Atualizando usuário com id: ${id}`);
 
     const user = await this.usersRepository.findById(id);
@@ -82,7 +125,19 @@ export class UsersService {
 
     const updatedUser = await this.usersRepository.update(id, updateUserDto);
     this.logger.log(`Usuário com id ${id} atualizado com sucesso`);
-    return updatedUser; // Retorna um UserDocument
+
+    if (!updatedUser) {
+      this.logger.warn(`Falha ao atualizar usuário com id ${id}`);
+      throw new InternalServerErrorException('Erro ao atualizar usuário');
+    }
+    const userObj = updatedUser.toObject<UserDocument>();
+    const userResponse: UserResponseDto = {
+      id: userObj._id.toString(),
+      email: userObj.email,
+      createdAt: userObj.createdAt,
+      updatedAt: userObj.updatedAt,
+    };
+    return userResponse;
   }
 
   async remove(id: string): Promise<void> {

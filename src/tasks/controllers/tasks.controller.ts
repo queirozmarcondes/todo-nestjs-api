@@ -24,7 +24,7 @@ import { Types } from 'mongoose';
 import { LoggerService } from 'src/log/logger.service';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
-@ApiBearerAuth('access-token') 
+@ApiBearerAuth('access-token')
 @ApiTags('Tasks')
 @UseGuards(JwtAuthGuard)
 @Controller('tasks')

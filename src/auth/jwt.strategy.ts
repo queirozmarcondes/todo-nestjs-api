@@ -1,36 +1,35 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../users/services/users.service';
+import { AuthService } from './auth.service';
+import { jwtConstants } from './constants';
 
-// Definimos uma interface para o payload do JWT
+// Mova esta interface para um arquivo separado (jwt-payload.interface.ts) se for usada em outros lugares
 export interface JwtPayload {
-  sub: string;
   email: string;
+  sub: string; // ID do usuário
 }
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly usersService: UsersService,
-  ) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+  constructor(private readonly authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET', 'JWT_SECRET2'),
+      secretOrKey: process.env.JWT_SECRET ?? jwtConstants.secret,
     });
   }
 
   async validate(payload: JwtPayload) {
-    const user = await this.usersService.findOne(payload.sub);
-
-    if (!user) {
-      throw new UnauthorizedException('Usuário não encontrado');
+    if (!payload.sub) {
+      throw new UnauthorizedException('Invalid token payload');
     }
 
-    // Retorna o usuário real do banco de dados
+    const user = await this.authService.findUserById(payload.sub);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
     return user;
   }
 }

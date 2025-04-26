@@ -23,7 +23,14 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     this.logger.log('Requisição de login recebida');
     try {
-      const result = await this.authService.login(loginDto);
+      const user = await this.authService.validateUser(
+        loginDto.email,
+        loginDto.password,
+      );
+      if (!user) {
+        throw new UnauthorizedException('Credenciais inválidas');
+      }
+      const result = this.authService.login(user); // Remova o await aqui
       return result;
     } catch (error) {
       if (error instanceof UnauthorizedException) {

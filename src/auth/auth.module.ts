@@ -15,7 +15,7 @@ import { LoggerService } from 'src/log/logger.service';
     PassportModule.register({ defaultStrategy: 'jwt' }), // Configura a estratégia de autenticação
     JwtModule.registerAsync({
       imports: [ConfigModule], // Depende do módulo de configuração
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'), // A chave secreta do JWT
         signOptions: {
           expiresIn: configService.get<string>('JWT_EXPIRES_IN', '1h'), // Tempo de expiração do token
