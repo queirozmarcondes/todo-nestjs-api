@@ -10,28 +10,28 @@ export class UsersRepository implements IUsersRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   // Criação de um novo usuário
-  async create(data: CreateUserDto): Promise<User> {
+  async create(data: CreateUserDto): Promise<UserDocument> {
     const user = new this.userModel(data);
-    return user.save();
+    return user.save(); // O save() retorna um UserDocument
   }
 
   // Encontrar usuário por e-mail
-  async findByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).exec();
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.userModel.findOne({ email }).exec(); // Retorna um UserDocument ou null
   }
 
   // Encontrar usuário por ID
-  async findById(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
+  async findById(id: string): Promise<UserDocument | null> {
+    return this.userModel.findById(id).exec(); // Retorna um UserDocument ou null
   }
 
   // Buscar todos os usuários
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async findAll(): Promise<UserDocument[]> {
+    return this.userModel.find().exec(); // Retorna um array de UserDocuments
   }
 
   // Atualizar um usuário
-  async update(id: string, data: Partial<CreateUserDto>): Promise<User | null> {
+  async update(id: string, data: Partial<CreateUserDto>): Promise<UserDocument | null> {
     return this.userModel.findByIdAndUpdate(id, data, { new: true }).exec(); // 'new: true' retorna o documento atualizado
   }
 
