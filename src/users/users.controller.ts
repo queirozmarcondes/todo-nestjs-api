@@ -21,7 +21,7 @@ import {
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @ApiOperation({ summary: 'Cria um novo usuário' })
@@ -33,7 +33,10 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Lista todos os usuários' })
-  @ApiResponse({ status: 200, description: 'Lista de usuários retornada com sucesso.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuários retornada com sucesso.',
+  })
   findAll() {
     return this.usersService.findAll();
   }

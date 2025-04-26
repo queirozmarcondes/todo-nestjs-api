@@ -9,7 +9,7 @@ import { UsersRepository } from './infra/repositories/users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) { }
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
@@ -27,9 +27,8 @@ export class UsersService {
     }
   }
 
-
   async findAll(): Promise<User[]> {
-    return this.usersRepository.findAll();  // Supondo que 'findAll' esteja implementado no repositório
+    return this.usersRepository.findAll(); // Supondo que 'findAll' esteja implementado no repositório
   }
 
   async findOne(id: string): Promise<User | null> {
@@ -54,14 +53,12 @@ export class UsersService {
     return this.usersRepository.update(id, updateUserDto);
   }
 
-
   async remove(id: string): Promise<void> {
     const user = await this.usersRepository.findById(id);
     if (!user) {
       throw new Error('User not found');
     }
 
-    await this.usersRepository.remove(id);  // Supondo que você tenha esse método no repositório
+    await this.usersRepository.remove(id); // Supondo que você tenha esse método no repositório
   }
-
 }

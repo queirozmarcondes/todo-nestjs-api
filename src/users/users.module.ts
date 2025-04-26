@@ -14,4 +14,4 @@ import { UsersRepository } from './infra/repositories/users.repository';
   providers: [UsersService, UsersRepository],
   exports: [UsersService, UsersRepository], // Exporte o UsersService se necessário em outros módulos
 })
-export class UsersModule { }
+export class UsersModule {}

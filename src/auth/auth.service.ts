@@ -14,13 +14,18 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto): Promise<{ access_token: string }> {
-    const user = await this.usersService.findByEmail(loginDto.email) as UserDocument;
+    const user = (await this.usersService.findByEmail(
+      loginDto.email,
+    )) as UserDocument;
 
     if (!user) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciais inválidas');
     }

@@ -19,8 +19,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     TasksModule,
     UsersModule,
-    AuthModule
-
+    AuthModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
