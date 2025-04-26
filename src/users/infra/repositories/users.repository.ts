@@ -31,7 +31,10 @@ export class UsersRepository implements IUsersRepository {
   }
 
   // Atualizar um usuário
-  async update(id: string, data: Partial<CreateUserDto>): Promise<UserDocument | null> {
+  async update(
+    id: string,
+    data: Partial<CreateUserDto>,
+  ): Promise<UserDocument | null> {
     return this.userModel.findByIdAndUpdate(id, data, { new: true }).exec(); // 'new: true' retorna o documento atualizado
   }
 

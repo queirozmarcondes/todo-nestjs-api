@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
@@ -25,7 +29,8 @@ export class UsersService {
         password: hashedPassword,
       };
 
-      const user: UserDocument = await this.usersRepository.create(userToCreate);
+      const user: UserDocument =
+        await this.usersRepository.create(userToCreate);
       this.logger.log(`Usuário criado com sucesso: ${user.email}`);
 
       // Remover a senha antes de retornar o usuário
@@ -58,7 +63,10 @@ export class UsersService {
     return this.usersRepository.findByEmail(email); // Retorna um UserDocument ou null
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument | null> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument | null> {
     this.logger.log(`Atualizando usuário com id: ${id}`);
 
     const user = await this.usersRepository.findById(id);

@@ -11,7 +11,13 @@ import {
 import { TasksService } from '../services/tasks.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
 import { Types } from 'mongoose';
 import { LoggerService } from 'src/log/logger.service';
 
@@ -35,7 +41,10 @@ export class TasksController {
 
   @Get()
   @ApiOperation({ summary: 'Lista todas as tarefas' })
-  @ApiResponse({ status: 200, description: 'Lista de tarefas retornada com sucesso.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de tarefas retornada com sucesso.',
+  })
   async findAll() {
     this.logger.log(`Received request to fetch all tasks`);
     const tasks = await this.tasksService.findAll();
@@ -46,7 +55,10 @@ export class TasksController {
   @ApiOperation({ summary: 'Busca uma tarefa pelo ID' })
   @ApiParam({ name: 'id', description: 'ID da tarefa (ObjectId do MongoDB)' })
   @ApiResponse({ status: 200, description: 'Tarefa encontrada.' })
-  @ApiResponse({ status: 404, description: 'Tarefa não encontrada ou ID inválido.' })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada ou ID inválido.',
+  })
   async findOne(@Param('id') id: string) {
     this.logger.log(`Received request to fetch task with ID: ${id}`);
     if (!Types.ObjectId.isValid(id)) {
@@ -60,7 +72,10 @@ export class TasksController {
   @ApiOperation({ summary: 'Atualiza uma tarefa pelo ID' })
   @ApiParam({ name: 'id', description: 'ID da tarefa (ObjectId do MongoDB)' })
   @ApiResponse({ status: 200, description: 'Tarefa atualizada com sucesso.' })
-  @ApiResponse({ status: 404, description: 'Tarefa não encontrada ou ID inválido.' })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada ou ID inválido.',
+  })
   @ApiBody({ type: UpdateTaskDto })
   async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     this.logger.log(`Received request to update task with ID: ${id}`);
@@ -75,7 +90,10 @@ export class TasksController {
   @ApiOperation({ summary: 'Remove uma tarefa pelo ID' })
   @ApiParam({ name: 'id', description: 'ID da tarefa (ObjectId do MongoDB)' })
   @ApiResponse({ status: 200, description: 'Tarefa deletada com sucesso.' })
-  @ApiResponse({ status: 404, description: 'Tarefa não encontrada ou ID inválido.' })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada ou ID inválido.',
+  })
   async remove(@Param('id') id: string) {
     this.logger.log(`Received request to delete a task`);
     if (!Types.ObjectId.isValid(id)) {

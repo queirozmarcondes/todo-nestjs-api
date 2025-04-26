@@ -22,8 +22,9 @@ import {
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService,
-              private readonly logger: LoggerService
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly logger: LoggerService,
   ) {}
 
   @Post()
