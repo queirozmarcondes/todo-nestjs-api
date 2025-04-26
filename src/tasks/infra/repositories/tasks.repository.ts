@@ -25,8 +25,13 @@ export class TasksRepository implements ITasksRepository {
     return task;
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<TaskDocument> {
-    const task = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, { new: true }).exec();
+  async update(
+    id: string,
+    updateTaskDto: UpdateTaskDto,
+  ): Promise<TaskDocument> {
+    const task = await this.taskModel
+      .findByIdAndUpdate(id, updateTaskDto, { new: true })
+      .exec();
     if (!task) throw new NotFoundException('Task not found');
     return task;
   }

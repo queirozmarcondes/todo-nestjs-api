@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt.auth.guard';
+import { LoggerService } from 'src/log/logger.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtAuthGuard } from './jwt.auth.guard';
     AuthService, // Serviço de autenticação
     JwtStrategy, // Estratégia JWT para validação de tokens
     JwtAuthGuard, // Guard de autenticação baseado em JWT
+    LoggerService, // Serviço de log
   ],
   controllers: [AuthController], // Controlador de autenticação
   exports: [JwtAuthGuard, JwtModule, AuthService], // Exports para uso em outros módulos

@@ -18,7 +18,8 @@ import { LoggerService } from 'src/log/logger.service';
 @ApiTags('Tasks')
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService,
+  constructor(
+    private readonly tasksService: TasksService,
     private readonly logger: LoggerService,
   ) {}
 

@@ -7,8 +7,9 @@ import { TaskDocument } from '../infra/schemas/tasks.schema';
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly tasksRepository: TasksRepository,
-              private readonly logger: LoggerService
+  constructor(
+    private readonly tasksRepository: TasksRepository,
+    private readonly logger: LoggerService,
   ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<TaskDocument> {
