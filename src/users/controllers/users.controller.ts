@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { LoggerService } from 'src/log/logger.service';
 import { UsersService } from '../services/users.service';
@@ -17,7 +18,9 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -36,6 +39,8 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @ApiBearerAuth('access-token') 
+  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'Lista todos os usuários' })
   @ApiResponse({
@@ -47,6 +52,8 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @ApiBearerAuth('access-token') 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Busca um usuário pelo ID' })
   @ApiParam({ name: 'id', description: 'ID do usuário' })
@@ -57,6 +64,8 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  @ApiBearerAuth('access-token') 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza um usuário pelo ID' })
   @ApiParam({ name: 'id', description: 'ID do usuário' })
@@ -66,6 +75,8 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @ApiBearerAuth('access-token') 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Remove um usuário pelo ID' })
   @ApiParam({ name: 'id', description: 'ID do usuário' })

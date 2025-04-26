@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from '../services/tasks.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
@@ -17,11 +18,15 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 import { LoggerService } from 'src/log/logger.service';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
+@ApiBearerAuth('access-token') 
 @ApiTags('Tasks')
+@UseGuards(JwtAuthGuard)
 @Controller('tasks')
 export class TasksController {
   constructor(
