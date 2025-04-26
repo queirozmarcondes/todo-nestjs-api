@@ -4,14 +4,19 @@ import { LoginDto } from './login.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) { }
+    constructor(private readonly authService: AuthService) {}
 
     @Post('login')
     async login(@Body() loginDto: LoginDto) {
         try {
-            return await this.authService.login(loginDto);
-        } catch (error) {
-            throw new UnauthorizedException('Credenciais inválidas');
+            const result = await this.authService.login(loginDto);
+            return result;
+        } catch (error) {           
+            if (error instanceof UnauthorizedException) {
+
+                throw new UnauthorizedException('Credenciais inválidas');
+            }
+            throw new UnauthorizedException('Erro ao tentar autenticar');
         }
     }
 }

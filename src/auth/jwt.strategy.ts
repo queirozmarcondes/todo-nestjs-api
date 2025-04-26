@@ -4,40 +4,33 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 
+// Definimos uma interface para o payload do JWT
+export interface JwtPayload {
+  sub: string;
+  email: string;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(
-        private readonly configService: ConfigService,
-        private readonly usersService: UsersService,
-    ) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: configService.get<string>('JWT_SECRET', 'fallbackSecret'), // Forneça um fallback
-            // Ou use secretOrKeyProvider para maior controle:
-            /*
-            secretOrKeyProvider: (
-                request: Request,
-                rawJwtToken: string,
-                done: (err: any, secret: string) => void
-            ) => {
-                done(null, configService.get<string>('JWT_SECRET'));
-            }
-            */
-        });
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('JWT_SECRET', 'JWT_SECRET2'),
+    });
+  }
+
+  async validate(payload: JwtPayload) {
+    const user = await this.usersService.findOne(payload.sub);
+
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado');
     }
 
-    async validate(payload: { sub: string; email: string }) {
-        const user = await this.usersService.findOne(payload.sub);
-
-        if (!user) {
-            throw new UnauthorizedException('Usuário não encontrado');
-        }
-
-        return {
-            id: payload.sub,
-            email: payload.email,
-            // Inclua outras propriedades necessárias
-        };
-    }
+    // Retorna o usuário real do banco de dados
+    return user;
+  }
 }

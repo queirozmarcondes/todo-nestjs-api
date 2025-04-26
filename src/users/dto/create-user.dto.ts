@@ -10,7 +10,7 @@ export class CreateUserDto {
     name: string;
 
     @ApiProperty({
-        example: 'renato@example.com',
+        example: 'teste@email.com',
         description: 'Endereço de e-mail válido do usuário',
     })
     @IsEmail()
